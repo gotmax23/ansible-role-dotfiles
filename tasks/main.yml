@@ -6,6 +6,7 @@
     version: "{{ dotfiles_repo_version }}"
     accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
   become: false
+  when: dotfiles_git
 
 - name: Ensure all configured dotfiles are links.
   command: "ls -F {{ dotfiles_home }}/{{ item }}"
@@ -21,6 +22,12 @@
     state: absent
   when: "'@' not in item.1.stdout"
   with_indexed_items: "{{ existing_dotfile_info.results }}"
+
+- name: Ensure dotfiles_dirs exist
+  file:
+    path: "{{ dotfiles_home }}/{{ item }}"
+    state: directory
+  with_items: "{{ dotfiles_dirs }}"
 
 - name: Link dotfiles into home folder.
   file:

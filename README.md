@@ -12,6 +12,10 @@ Requires `git` on the managed machine (you can easily install it with `geerlingg
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
+    dotfiles_git: true
+Whether or not to clone a git repo to `dotfiles_repo_local_destination` before linking `dotfiles_files`.
+
+
     dotfiles_repo: "https://github.com/geerlingguy/dotfiles.git"
     dotfiles_repo_version: master
 
@@ -23,11 +27,15 @@ Add the hostkey for the repo url if not already added. If ssh_opts contains "-o 
 
     dotfiles_repo_local_destination: "~/Documents/dotfiles"
 
-The local path where the `dotfiles_repo` will be cloned.
+The local path from where the `dotfiles_files`` will be linked to `dotfiles_home` and where `dotfiles_repo` will be cloned to if `dotfiles_git` is true.
 
     dotfiles_home: "~"
 
 The home directory where dotfiles will be linked. Generally, the default should work, but in some circumstances, or when running the role as sudo on behalf of another user, you may want to specify the full path.
+
+    dotfiles_dirs: []
+
+List of directories to create in `dotfiles_home` (if any). For example, if you have `.config/mpv/mvp.conf` in dotfiles_files, you could add `.config/mpv` to `dotfiles_dirs`.
 
     dotfiles_files:
       - .zshrc
