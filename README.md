@@ -35,7 +35,7 @@ The home directory where dotfiles will be linked. Generally, the default should 
 
     dotfiles_dirs: []
 
-List of directories to create in `dotfiles_home` (if any). For example, if you have `.config/mpv/mvp.conf` in dotfiles_files, you could add `.config/mpv` to `dotfiles_dirs`.
+List of directories to create in `dotfiles_home` (if any). For example, if you have `.config/mpv/mvp.conf` in `dotfiles_files`, you could add `.config/mpv` to `dotfiles_dirs`.
 
     dotfiles_files:
       - .zshrc
