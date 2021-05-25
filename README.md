@@ -27,7 +27,7 @@ Add the hostkey for the repo url if not already added. If ssh_opts contains "-o 
 
     dotfiles_repo_local_destination: "~/Documents/dotfiles"
 
-The local path from where the `dotfiles_files`` will be linked to `dotfiles_home` and where `dotfiles_repo` will be cloned to if `dotfiles_git` is true.
+The local path from where the `dotfiles_files` will be linked to `dotfiles_home` and where `dotfiles_repo` will be cloned to if `dotfiles_git` is true.
 
     dotfiles_home: "~"
 
