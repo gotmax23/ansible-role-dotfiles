@@ -29,15 +29,16 @@
 
 - name: Ensure dotfiles_dirs exist
   file:
-    path: "{{ dotfiles_home }}/{{ item }}"
+    path: "{{ dotfiles_home }}/{{ item.name | default(item) }}"
+    mode: "{{ item.mode | default('0755') }}"
     state: directory
   with_items: "{{ dotfiles_dirs }}"
 
-- name: Link dotfiles into home folder.
+- name: Link dotfiles_files into home folder.
   file:
-    src: "{{ dotfiles_repo_local_destination }}/{{ item }}"
-    dest: "{{ dotfiles_home }}/{{ item }}"
+    src: "{{ dotfiles_repo_local_destination }}/{{ item.src | default(item.name | default(item)) }}"
+    dest: "{{ dotfiles_home }}/{{ item.dest | default(item.name | default(item)) }}"
     state: link
-    mode: 0644
+    mode: "0644"
   become: false
   with_items: "{{ dotfiles_files }}"
