@@ -1,6 +1,10 @@
 ---
 - name: Ensure dotfiles repository is cloned locally.
-  git:
+  tags:
+    - update
+    - clone
+    - git
+  ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_repo_local_destination }}"
     version: "{{ dotfiles_repo_version }}"
@@ -10,35 +14,43 @@
   when: dotfiles_git
 
 - name: Ensure all configured dotfiles are links.
-  command: "ls -F {{ dotfiles_home }}/{{ item }}"
+  tags:
+    - link
+  ansible.builtin.command: "ls -F {{ dotfiles_home }}/{{ item }}"
   register: existing_dotfile_info
   failed_when: false
   check_mode: false
   changed_when: false
-  with_items: "{{ dotfiles_files }}"
+  loop: "{{ dotfiles_files }}"
 
 - name: Remove existing dotfiles file if a replacement is being linked.
-  file:
+  tags:
+    - link
+  ansible.builtin.file:
     path: "{{ dotfiles_home }}/{{ dotfiles_files[index] }}"
     state: absent
   when: "'@' not in item.stdout"
-  loop: "{{ existing_dotfile_info.results | flatten(levels=1)}}"
+  loop: "{{ existing_dotfile_info.results | flatten(levels=1) }}"
   loop_control:
     index_var: index
     label: "{{ item['item'] }}"
 
 - name: Ensure dotfiles_dirs exist
-  file:
+  tags:
+    - link
+  ansible.builtin.file:
     path: "{{ dotfiles_home }}/{{ item.name | default(item) }}"
     mode: "{{ item.mode | default('0755') }}"
     state: directory
-  with_items: "{{ dotfiles_dirs }}"
+  loop: "{{ dotfiles_dirs }}"
 
 - name: Link dotfiles_files into home folder.
-  file:
+  tags:
+    - link
+  ansible.builtin.file:
     src: "{{ dotfiles_repo_local_destination }}/{{ item.src | default(item.name | default(item)) }}"
     dest: "{{ dotfiles_home }}/{{ item.dest | default(item.name | default(item)) }}"
     state: link
     mode: "0644"
   become: false
-  with_items: "{{ dotfiles_files }}"
+  loop: "{{ dotfiles_files }}"
